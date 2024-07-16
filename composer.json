@@ -1,0 +1,19 @@
+{
+    "name": "rud99/sber-sbp",
+    "description": "Sberbank SBP payments",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mikhail Zakharov",
+            "email": "debweb18@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Rud99\\SberSbp\\": "src/"
+        }
+    },
+    "require": {}
+}
