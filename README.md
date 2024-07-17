@@ -39,7 +39,10 @@ composer require rud99/sber-sbp
 ### coming soon
 
 ## Тестирование !!! Пока не работает !!!
+### coming soon
 
-```bash
-composer test
-```
+[//]: # (```bash)
+
+[//]: # (composer test)
+
+[//]: # (```)
