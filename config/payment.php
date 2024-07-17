@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'sberbank' =>  [
+    'sberbank' => [
         'sbp' => [
             'terminal_id' => env('SBER_SBP_TERMINAL_ID'),
             'member_id' => env('SBER_SBP_MEMBER_ID'),
@@ -9,6 +9,6 @@ return [
             'client_secret' => env('SBER_SBP_CLIENT_SECRET'),
             'cert_path' => env('SBER_SBP_CERT_PATH'),
             'cert_password' => env('SBER_SBP_CERT_PASSWORD'),
-            ],
+        ],
     ],
 ];
