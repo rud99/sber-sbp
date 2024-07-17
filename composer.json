@@ -9,7 +9,15 @@
             "email": "debweb18@gmail.com"
         }
     ],
+    "homepage": "https://github.com/rud99/sber-sbp",
+    "keywords": ["Laravel", "Sber", "Sbp"],
     "minimum-stability": "dev",
+    "require": {
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+    },
     "autoload": {
         "psr-4": {
             "Rud99\\SberSbp\\": "src/"
@@ -17,14 +25,17 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Rud99\\SberSbp\\Test\\": "tests/"
+            "Rud99\\SberSbp\\Tests\\": "tests"
         }
     },
-    "require": {
-        "php": "^8.2",
-        "ext-json": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^11.0.1"
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rud99\\SberSbp\\SberSbpServiceProvider"
+            ],
+            "aliases": {
+                "SberSbp": "Rud99\\SberSbp\\Facades\\SberSbp"
+            }
+        }
     }
 }

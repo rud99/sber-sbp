@@ -2,7 +2,7 @@
 
 namespace Rud99\SberSbp\Dto;
 
-use Io\Github\Dimous\Sber\QR\Util;
+use Rud99\SberSbp\Util;
 
 class OrderItem
 {

@@ -2,6 +2,7 @@
 
 namespace Rud99\SberSbp;
 
+use Illuminate\Support\Facades\Storage;
 use Rud99\SberSbp\Dto\CancelResult;
 use Rud99\SberSbp\Dto\CreateResult;
 use Rud99\SberSbp\Dto\Order;
@@ -47,7 +48,7 @@ class Client
                 CURLOPT_POST => true,
                 CURLOPT_FAILONERROR => true,
                 CURLOPT_SSLCERTTYPE => "P12",
-                CURLOPT_SSLCERT => $sCertPath, // разместить в хранилище сертификатов
+                CURLOPT_SSLCERT => Storage::path($sCertPath), // разместить в хранилище сертификатов
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_SSL_VERIFYPEER => false,
