@@ -31,18 +31,18 @@ class SberSbpServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/sber-sbp.php', 'sber-sbp');
+//        $this->mergeConfigFrom(__DIR__ . '/../config/sber-sbp.php', 'sber-sbp');
 
         // Register the service the package provides.
         $this->app->singleton('sber-sbp', function ($app) {
             $client =  new Client(
-                config("sber-sbp.terminal_id"),
-                config("sber-sbp.member_id"),
-                config("sber-sbp.client_id"),
-                config("sber-sbp.client_secret"),
-                config("sber-sbp.cert_path"),
-                config("sber-sbp.cert_password"),
-                config("sber-sbp.is_production"),
+                env('SBER_SBP_TERMINAL_ID'),
+                env('SBER_SBP_MEMBER_ID'),
+                env('SBER_SBP_CLIENT_ID'),
+                env('SBER_SBP_CLIENT_SECRET'),
+                env('SBER_SBP_CERT_PATH'),
+                env('SBER_SBP_CERT_PASSWORD'),
+                env('SBER_SBP_IS_PRODUCTION', true),
             );
             $client->setCache(new LaravelCacheAdapter());
             return $client;
@@ -67,9 +67,9 @@ class SberSbpServiceProvider extends ServiceProvider
     protected function bootForConsole(): void
     {
         // Publishing the configuration file.
-        $this->publishes([
+        /*$this->publishes([
             __DIR__ . '/../config/sber-sbp.php' => config_path('sber-sbp.php'),
-        ], 'sber-sbp.config');
+        ], 'sber-sbp.config');*/
 
         // Publishing the views.
         /*$this->publishes([
