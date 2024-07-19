@@ -19,7 +19,7 @@ composer require rud99/sber-sbp
 2. Сбер выпускает сертификат(хранилище сертификатов) с использованием старого/небезопасного алгоритма типа PKCS12. Чтоб
    его использовать с Curl в библиотеке, необходимо его перевести в новый
    формат. [Реф1](https://forum.clarionlife.net/viewtopic.php?t=4893&start=45), [Реф2](https://stackoverflow.com/questions/72598983/curl-openssl-error-error0308010cdigital-envelope-routinesunsupported)
-3. Выполняем преобразование:
+3. Выполняем преобразование (openssl ver. 1.x.x):
    ```openssl pkcs12 -in certificate_xxxxxx.p12 -nodes | openssl pkcs12 -export -descert -out new_certificate_xxxxxx.p12```
 4. Файл(new_certificate_xxxxxx.p12) помещаем в ````storage/app/certs```` !!! ВАЖНО !!!
 
