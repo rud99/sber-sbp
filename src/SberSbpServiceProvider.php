@@ -42,7 +42,7 @@ class SberSbpServiceProvider extends ServiceProvider
                 env('SBER_SBP_CLIENT_SECRET'),
                 env('SBER_SBP_CERT_PATH'),
                 env('SBER_SBP_CERT_PASSWORD'),
-                env('SBER_SBP_IS_PRODUCTION', true),
+                env('SBER_SBP_IS_PRODUCTION', false),
             );
             $client->setCache(new LaravelCacheAdapter());
             return $client;
