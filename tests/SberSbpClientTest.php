@@ -18,7 +18,14 @@ class SberSbpClientTest extends TestCase
     {
         parent::setUp();
 
-        $this->__oClient = new Client(config("payment.sberbank.qr.terminal_id"), config("payment.sberbank.qr.member_id"), config("payment.sberbank.qr.client_id"), config("payment.sberbank.qr.client_secret"), config("payment.sberbank.qr.cert_path"), config("payment.sberbank.qr.cert_password"));
+        $this->__oClient = new Client(
+            env('SBER_SBP_TERMINAL_ID'),
+            env('SBER_SBP_MEMBER_ID'),
+            env('SBER_SBP_CLIENT_ID'),
+            env('SBER_SBP_CLIENT_SECRET'),
+            env('SBER_SBP_CERT_PATH'),
+            env('SBER_SBP_CERT_PASSWORD')
+        );
 
         $this->__oClient->setCache(new LaravelCacheAdapter());
     }
