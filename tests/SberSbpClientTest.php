@@ -110,6 +110,9 @@ class SberSbpClientTest extends TestCase
         $this->assertEquals(Order::STATE_REVERSED, $oCancel->getOrderStatus(), "Статус заказа");
         //!!! код ошибки - 990000 Операция в обработке QR СБП Для внутреннего использования, не должен обрабатываться как ошибка !!!
         $this->assertEquals("990000", $oCancel->getErrorCode(), "Код ошибки отмены заказа");
+
+        $this->assertEquals(Order::STATE_REVERSED, $oStatus->getOrderState(), "Статус заказа");
+        $this->assertEquals("000000", $oStatus->getErrorCode(), "Код ошибки статуса заказа");
     }
 
     public function test_positive_case_REFUND()
@@ -183,6 +186,11 @@ class SberSbpClientTest extends TestCase
         $this->assertEquals(Order::STATE_REFUNDED, $oCancel->getOrderStatus(), "Статус заказа");
         //!!! код ошибки - 990000 Операция в обработке QR СБП Для внутреннего использования, не должен обрабатываться как ошибка !!!
         $this->assertEquals("990000", $oCancel->getErrorCode(), "Код ошибки отмены заказа");
+
+        $oStatus = $this->__oClient->status($oOrder->getOrderNumber(), $oOrder->getOrderId());
+
+        $this->assertEquals(Order::STATE_REFUNDED, $oStatus->getOrderState(), "Статус заказа");
+        $this->assertEquals("000000", $oStatus->getErrorCode(), "Код ошибки статуса заказа");
     }
 
 
@@ -211,7 +219,7 @@ class SberSbpClientTest extends TestCase
     /**
      * сценарий 2 (отмена неоплаченного заказа) -- https://api.developer.sber.ru/product/PlatiQR/doc/v1/QR_API_doc541
      */
-    public function test_negative_case_2()
+    public function test_negative_case()
     {
         /**
          * выполнить запрос /creation, получить успешный ответ с order_state=CREATED. Заказ создан
