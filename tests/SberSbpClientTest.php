@@ -41,14 +41,12 @@ class SberSbpClientTest extends TestCase
     //
     public function test_positive_case_1()
     {
-        $internalOrderNumber = "2";
-
         /**
          * выполнить запрос /creation, получить успешный ответ с order_state=CREATED. Заказ создан. Заказ автоматически переводится в статус PAID через минуту после создания;
          */
         $oOrder = $this->__oClient->create(
             new Order(
-                $internalOrderNumber,
+                rand(),
                 "test",
                 date("Y-m-d\TH:i:s\Z"),
                 10,
@@ -57,7 +55,6 @@ class SberSbpClientTest extends TestCase
                 ]
             )
         );
-//        dd($oOrder);
 
         $this->assertEquals(Order::STATE_CREATED, $oOrder->getOrderState(), "Статус заказа");
         $this->assertEquals("000000", $oOrder->getErrorCode(), "Код ошибки создания заказа");
@@ -67,16 +64,6 @@ class SberSbpClientTest extends TestCase
          */
         sleep(30);
         $oStatus = $this->__oClient->status($oOrder->getOrderNumber(), $oOrder->getOrderId());
-
-        /*
-         * если заказ PAID, а в истории операций есть REFUND, то вернуть не получилось, нужно искать другой способ
-         *
-        collect($oStatus->getOrderOperationParams())->first(
-            function ($oItem) {
-                return "REFUND" == $oItem->getOperationType();
-            }
-        );
-        */
 
         $this->assertEquals(Order::STATE_CREATED, $oStatus->getOrderState(), "Статус заказа");
         $this->assertEquals("000000", $oStatus->getErrorCode(), "Код ошибки статуса заказа");
@@ -89,50 +76,43 @@ class SberSbpClientTest extends TestCase
         sleep(35); // ожидаем еще 35 секунд, чтобы заказ перешёл в статус PAID
         $oStatus = $this->__oClient->status($oOrder->getOrderNumber(), $oOrder->getOrderId());
 
-        /*
-         * если заказ PAID, а в истории операций есть REFUND, то вернуть не получилось, нужно искать другой способ
-         *
-        collect($oStatus->getOrderOperationParams())->first(
-            function ($oItem) {
-                return "REFUND" == $oItem->getOperationType();
-            }
-        );
-        */
-
         $this->assertEquals(Order::STATE_PAID, $oStatus->getOrderState(), "Статус заказа");
         $this->assertEquals("000000", $oStatus->getErrorCode(), "Код ошибки статуса заказа");
+
+        /**
+         * выполнить запрос отмены оплаченного заказа /cancel (заказ в статусе PAID):
+         * с operation_type=REVERSE, получить успешный ответ с order_state=REVERSED;
+         */
+        //@todo
+
+
     }
 
-//    public function test_create_order()
-//    {
-//        $oOrder = $this->__oClient->create(
-//            new Order(
-//                "2",
-//                "test",
-//                date("Y-m-d\TH:i:s\Z"),
-//                10,
-//                [
-//                    new OrderItem("test", "test", 1, 10),
-//                ]
-//            )
-//        );
-//        dd($oOrder);
-//
-//        $this->assertEquals("000000", $oOrder->getErrorCode(), "Код ошибки создания заказа");
-//    }
 
-    //---
+    /**
+     * выполнить запрос /registry
+     * с registryType=REGISTRY, получить успешный ответ с перечнем операций за период
+     */
+    public function test_get_registry_registry()
+    {
+        // в регистрах нет ожидающих оплаты
+        $oRegistry = $this->__oClient->registry(Client::REGISTRY_TYPE_REGISTRY, "2023-03-16 14:00:00", "2023-03-16 15:00:00");
 
-//    public function test_revoke_order()
-//    {
-//        $oRevoke = $this->__oClient->revoke("27df07b97ecd4bbfbba5bbbc5086744c");
-//        dd($oRevoke);
-//
-//        $this->assertEquals("000000", $oRevoke->getErrorCode(), "Код ошибки отмены неоплаченного заказа");
-//    }
+        $this->assertEquals("000000", $oRegistry->getErrorCode(), "Код ошибки регистра операций");
+    }
 
-    //---
-//
+    /**
+     * выполнить запрос /registry
+     * с registryType=QUANTITY, получить успешный ответ с агрегированными данными по операциям за период
+     */
+    public function test_get_registry_quantity()
+    {
+        $oRegistry = $this->__oClient->registry(Client::REGISTRY_TYPE_QUANTITY, "today", "now");
+
+        $this->assertEquals("000000", $oRegistry->getErrorCode(), "Код ошибки регистра операций");
+    }
+
+
 //    /**
 //     * Похоже, можно ревёрсить любую операцию, даже ревёрс
 //     */
@@ -154,46 +134,6 @@ class SberSbpClientTest extends TestCase
 //        $oCancel = $this->__oClient->cancel("43012165", "27df07b97ecd4bbfbba5bbbc5086744c", "91cc352d-ddd9-4a2f-93df-51d89c6a2ed0-e15d170f-5792", Client::CANCEL_OPERATION_TYPE_REFUND, 5, "test");
 //
 //        $this->assertEquals("000000", $oCancel->getErrorCode(), "Код ошибки отмены заказа");
-//    }
-//
-//    //---
-//
-//    public function test_get_order_status()
-//    {
-//        $oStatus = $this->__oClient->status("1268286", "71ce0e8a2bfc4335a77f6575ed39cd27");
-//
-//        /*
-//         * если заказ PAID, а в истории операций есть REFUND, то вернуть не получилось, нужно искать другой способ
-//         *
-//        collect($oStatus->getOrderOperationParams())->first(
-//            function ($oItem) {
-//                return "REFUND" == $oItem->getOperationType();
-//            }
-//        );
-//        */
-//
-//        $this->assertEquals("000000", $oStatus->getErrorCode(), "Код ошибки статуса заказа");
-//
-//        $this->assertEquals(Order::STATE_PAID, $oStatus->getOrderState());
-//    }
-//
-//    //---
-//
-//    public function test_get_registry_registry()
-//    {
-//        // в регистрах нет ожидающих оплаты
-//        $oRegistry = $this->__oClient->registry(Client::REGISTRY_TYPE_REGISTRY, "2023-03-16 14:00:00", "2023-03-16 15:00:00");
-//
-//        $this->assertEquals("000000", $oRegistry->getErrorCode(), "Код ошибки регистра операций");
-//    }
-//
-//    //---
-//
-//    public function test_get_registry_quantity()
-//    {
-//        $oRegistry = $this->__oClient->registry(Client::REGISTRY_TYPE_QUANTITY, "today", "now");
-//
-//        $this->assertEquals("000000", $oRegistry->getErrorCode(), "Код ошибки регистра операций");
 //    }
 //
 //    public function test_notification()
@@ -228,4 +168,44 @@ class SberSbpClientTest extends TestCase
 //
 //        $this->assertEquals([$rqTm, $rqUid], ["2022-03-15T15:52:01Z", "bc13cA5CE261D2661d99f1fD1Bb049Ac"]);
 //    }
+
+    /**
+     * сценарий 2 (отмена неоплаченного заказа) -- https://api.developer.sber.ru/product/PlatiQR/doc/v1/QR_API_doc541
+     */
+    public function test_negative_case_2()
+    {
+        /**
+         * выполнить запрос /creation, получить успешный ответ с order_state=CREATED. Заказ создан
+         */
+        $oOrder = $this->__oClient->create(
+            new Order(
+                rand(),
+                "test",
+                date("Y-m-d\TH:i:s\Z"),
+                10,
+                [
+                    new OrderItem("test", "test", 1, 10),
+                ]
+            )
+        );
+
+        $this->assertEquals(Order::STATE_CREATED, $oOrder->getOrderState(), "Статус заказа");
+        $this->assertEquals("000000", $oOrder->getErrorCode(), "Код ошибки создания заказа");
+
+
+        /**
+         * выполнить запрос /status в течении минуты, получить успешный ответ с order_state=CREATED
+         */
+        sleep(30);
+        $oStatus = $this->__oClient->status($oOrder->getOrderNumber(), $oOrder->getOrderId());
+        $this->assertEquals(Order::STATE_CREATED, $oStatus->getOrderState(), "Статус заказа");
+        $this->assertEquals("000000", $oStatus->getErrorCode(), "Код ошибки статуса заказа");
+
+        /**
+         * выполнить запрос /revocation, получить успешный ответ с order_state=REVOKED. Неоплаченный заказ отменен (Например, если клиент отказался от оплаты).
+         */
+        $oRevoke = $this->__oClient->revoke($oStatus->getOrderId());
+        $this->assertEquals(Order::STATE_REVOKED, $oRevoke->getOrderState(), "Статус заказа");
+        $this->assertEquals("000000", $oRevoke->getErrorCode(), "Код ошибки отмены неоплаченного заказа");
+    }
 }

@@ -38,11 +38,13 @@ composer require rud99/sber-sbp
 
 ### coming soon
 
-## Тестирование !!! Пока не работает !!!
-### coming soon
-
-[//]: # (```bash)
-
-[//]: # (composer test)
-
-[//]: # (```)
+## Тестирование
+#### !!! Пока не работает отестирование омены заказа !!!
+1. Настраиваем тестовую среду SandBox SberPay.QR  [Ссылка](https://api.developer.sber.ru/product/PlatiQR/doc/v1/QR_API_doc54)
+2. Добавляем в phpunit.xml секцию с пакетом
+   ````
+   <testsuite name="SberSbp">
+       <directory>./vendor/rud99/sber-sbp/tests</directory>
+   </testsuite>
+   ````
+3. php artisan test
