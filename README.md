@@ -39,7 +39,6 @@ composer require rud99/sber-sbp
 ### coming soon
 
 ## Тестирование
-#### !!! Пока не работает отестирование омены заказа !!!
 1. Настраиваем тестовую среду SandBox SberPay.QR  [Ссылка](https://api.developer.sber.ru/product/PlatiQR/doc/v1/QR_API_doc54)
 2. Добавляем в phpunit.xml секцию с пакетом
    ````
