@@ -13,7 +13,7 @@ final class Util
     //---
 
     /**
-     * Заказы по владивостокскому времени, а журнал операций по московскому
+     * Заказы по местному времени, а журнал операций по московскому
      */
     public static function formatDate(string $sSourceDateTime, string $sTargetTimeZone = "Europe/Moscow"): string
     {
