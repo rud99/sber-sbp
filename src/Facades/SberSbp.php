@@ -4,11 +4,9 @@ namespace Rud99\SberSbp\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-/** @see Order */
-/** @see CreateResult */
-/** @see CancelResult */
-/** @see OrderItem */
-/** @see RevokeResult */
+/**
+ * @mixin \Rud99\SberSbp\Client
+*/
 class SberSbp extends Facade
 {
     /**
